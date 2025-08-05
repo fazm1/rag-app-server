@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { extractTextFromPDF, chunkText } from '../utils/pdfUtils';
-import { storeChunks, querySimilarChunks } from '../services/chroma';
+import { createAndStoreChunks, querySimilarChunks } from '../services/chroma';
 import { generateAnswerFromGroq } from '../utils/groqUtils';
 
 export const handleQuery = async (req: Request, res: Response) => {
@@ -10,13 +10,11 @@ export const handleQuery = async (req: Request, res: Response) => {
     }
 
     const fullText = await extractTextFromPDF(req.file.path);
+    const chunks = chunkText(fullText, 100); // 100 words per chunk
 
-    const chunks = chunkText(fullText, 100); // ~100 words per chunk
+    const collectionName = await createAndStoreChunks(chunks);
 
-    // 3. Store chunks with embeddings in Chroma
-    await storeChunks(chunks);
-
-    const relevantChunks = await querySimilarChunks(req.body.query);
+    const relevantChunks = await querySimilarChunks(collectionName, req.body.query);
 
     const context = relevantChunks.join('\n\n');
 

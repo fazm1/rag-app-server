@@ -2,9 +2,8 @@ import { ChromaClient } from 'chromadb';
 import { embedText } from './embedding';
 
 const client = new ChromaClient({
-     path: process.env.CHROMA_URL || 'http://localhost:8000'
+  path: process.env.CHROMA_URL || 'http://localhost:8000',
 });
-
 
 const embeddingFunction = {
   generate: async (texts: string[]) => {
@@ -12,16 +11,14 @@ const embeddingFunction = {
   },
 };
 
-const COLLECTION_NAME = 'pdf_chunks';
+export const createAndStoreChunks = async (chunks: string[]): Promise<string> => {
+  const collectionName = `pdf_${Date.now()}`;
 
-let collectionPromise = client.getOrCreateCollection({
-  name: COLLECTION_NAME,
-  metadata: { description: 'Chunks of PDF text' },
-  embeddingFunction, 
-});
-
-export const storeChunks = async (chunks: string[]) => {
-  const collection = await collectionPromise;
+  const collection = await client.createCollection({
+    name: collectionName,
+    metadata: { description: 'Chunks for a single PDF file' },
+    embeddingFunction,
+  });
 
   const embeddings = await embeddingFunction.generate(chunks);
 
@@ -30,10 +27,19 @@ export const storeChunks = async (chunks: string[]) => {
     documents: chunks,
     embeddings,
   });
+
+  return collectionName; 
 };
 
-export const querySimilarChunks = async (query: string, k = 5): Promise<string[]> => {
-  const collection = await collectionPromise;
+export const querySimilarChunks = async (
+  collectionName: string,
+  query: string,
+  k = 5
+): Promise<string[]> => {
+  const collection = await client.getCollection({
+    name: collectionName,
+    embeddingFunction,
+  });
 
   const [queryEmbedding] = await embeddingFunction.generate([query]);
 
