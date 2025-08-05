@@ -47,6 +47,7 @@ src/
 - Cohere API key (for embeddings)
 
 ### Installation
+```
 1. clone this repo
 2. open terminal and run: "docker-compose up --build" (Docker desktop must be installed first)
 ```
@@ -63,14 +64,14 @@ GROQ_API_KEY=groq_api_key
 ```
 
 
-##  API Endpoints
+### API Endpoint:
 
-### POST `/api/query`
+## POST `/api/query`
 - Upload a PDF and index its content while providing a query.
 
 ---
 
-## Tech Stack
+### Tech Stack
 
 - **Node.js + Express**
 - **TypeScript**
