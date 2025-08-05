@@ -1,4 +1,4 @@
-import { ChromaClient } from 'chromadb';
+import { ChromaClient } from 'chromadb-client';
 import { embedText } from './embedding';
 
 const client = new ChromaClient({
@@ -14,12 +14,17 @@ const embeddingFunction = {
 export const createAndStoreChunks = async (chunks: string[]): Promise<string> => {
   const collectionName = `pdf_${Date.now()}`;
 
-  const collection = await client.createCollection({
+  await client.createCollection({
     name: collectionName,
     metadata: { description: 'Chunks for a single PDF file' },
     embeddingFunction,
   });
 
+  const collection = await client.getCollection({
+    name: collectionName,
+    embeddingFunction,
+  });
+  
   const embeddings = await embeddingFunction.generate(chunks);
 
   await collection.add({
