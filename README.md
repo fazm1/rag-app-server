@@ -41,6 +41,7 @@ src/
 
 - Node.js >= 18
 - Yarn or npm
+- Docker Desktop installed
 - Chroma DB running locally or in the cloud
 - GROQ API key (for LLM responses)
 - Cohere API key (for embeddings)
