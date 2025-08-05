@@ -3,17 +3,8 @@ services:
     build: .
     ports:
       - "3000:3000"
-    depends_on:
-      - chromadb
     environment:
-      - CHROMA_URL=http://chromadb:8000
-
-  chromadb:
-    image: ghcr.io/chroma-core/chroma:latest
-    ports:
-      - "8000:8000"
-    volumes:
-      - chroma_data:/chroma/.chroma
-
-volumes:
-  chroma_data:
+      - CHROMA_URL=${CHROMA_URL}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - EMBEDDING_API_KEY=${EMBEDDING_API_KEY}
+      - PORT=${PORT}
