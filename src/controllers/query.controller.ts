@@ -10,7 +10,7 @@ export const handleQuery = async (req: Request, res: Response) => {
     }
 
     const fullText = await extractTextFromPDF(req.file.path);
-    const chunks = chunkText(fullText, 100); // 100 words per chunk
+    const chunks = chunkText(fullText, 300); // 300 words per chunk
 
     const collectionName = await createAndStoreChunks(chunks);
 
