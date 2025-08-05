@@ -8,7 +8,7 @@ import apiRoutes from './routes/query.routes';
 const app = express();
 
 app.use(cors({
-    origin: ["http://localhost:5173", "http://chroma-production-14ba.up.railway.app"],
+    origin: ["http://localhost:5173", "https://rag-app-by-farid.netlify.app"],
     credentials: true,
 }));
 app.use(express.json());
