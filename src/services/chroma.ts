@@ -17,7 +17,7 @@ const COLLECTION_NAME = 'pdf_chunks';
 let collectionPromise = client.getOrCreateCollection({
   name: COLLECTION_NAME,
   metadata: { description: 'Chunks of PDF text' },
-  embeddingFunction, // 👈 use your custom embedding function
+  embeddingFunction, 
 });
 
 export const storeChunks = async (chunks: string[]) => {
